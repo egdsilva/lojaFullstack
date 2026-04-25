@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './app/router'
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 import './styles/global.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
