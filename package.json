@@ -1,0 +1,17 @@
+{
+  "name": "lojinha-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "lojinha-frontend",
+    "lojinha-backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=lojinha-frontend\" \"npm run dev --workspace=lojinha-backend\"",
+    "frontend": "npm run dev --workspace=lojinha-frontend",
+    "backend": "npm run dev --workspace=lojinha-backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
