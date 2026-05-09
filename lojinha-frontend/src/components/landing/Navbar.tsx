@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useCart } from '../../context/CartContext'
+import CartDrawer from '../cart/CartDrawer'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { count, openCart } = useCart()
 
   return (
     <>
@@ -31,10 +34,36 @@ export default function Navbar() {
           >
             Entrar
           </Link>
+          {/* Cart button desktop */}
+          <button
+            onClick={openCart}
+            aria-label="Abrir carrinho"
+            className="relative flex items-center justify-center w-10 h-10 rounded-lg hover:bg-emerald-50 transition-colors"
+          >
+            <span className="text-xl">🛒</span>
+            {count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-amber-400 text-emerald-900 text-[10px] font-extrabold w-5 h-5 flex items-center justify-center rounded-full">
+                {count > 99 ? '99+' : count}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Mobile: Entrar + Hambúrguer */}
         <div className="flex md:hidden items-center gap-3">
+          {/* Cart button mobile */}
+          <button
+            onClick={openCart}
+            aria-label="Abrir carrinho"
+            className="relative flex items-center justify-center w-9 h-9 rounded-lg hover:bg-emerald-50 transition-colors"
+          >
+            <span className="text-lg">🛒</span>
+            {count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-amber-400 text-emerald-900 text-[10px] font-extrabold w-4 h-4 flex items-center justify-center rounded-full">
+                {count > 9 ? '9+' : count}
+              </span>
+            )}
+          </button>
           <Link
             to="/login"
             className="text-sm font-semibold bg-emerald-700 text-white px-4 py-1.5 rounded-lg hover:bg-emerald-800 transition-all"
@@ -71,6 +100,8 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
+
+      <CartDrawer />
     </>
   )
 }
