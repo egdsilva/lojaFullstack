@@ -5,15 +5,15 @@ import Footer from '../components/landing/Footer'
 import { useCart } from '../context/CartContext'
 
 const allProducts = [
-  { id: 1, name: 'Camiseta Básica', price: 49.9, category: 'Roupas', img: 'https://placehold.co/400x400?text=Camiseta', badge: 'Mais vendido' },
-  { id: 2, name: 'Tênis Casual', price: 189.9, category: 'Calçados', img: 'https://placehold.co/400x400?text=T%C3%AAnis', badge: 'Novo' },
-  { id: 3, name: 'Mochila Urban', price: 129.9, category: 'Acessórios', img: 'https://placehold.co/400x400?text=Mochila', badge: '' },
-  { id: 4, name: 'Calça Jeans', price: 99.9, category: 'Roupas', img: 'https://placehold.co/400x400?text=Cal%C3%A7a', badge: '' },
-  { id: 5, name: 'Boné Streetwear', price: 59.9, category: 'Acessórios', img: 'https://placehold.co/400x400?text=Bon%C3%A9', badge: 'Promoção' },
-  { id: 6, name: 'Sandália Conforto', price: 79.9, category: 'Calçados', img: 'https://placehold.co/400x400?text=Sand%C3%A1lia', badge: '' },
-  { id: 7, name: 'Jaqueta Corta-Vento', price: 219.9, category: 'Roupas', img: 'https://placehold.co/400x400?text=Jaqueta', badge: 'Novo' },
-  { id: 8, name: 'Carteira de Couro', price: 89.9, category: 'Acessórios', img: 'https://placehold.co/400x400?text=Carteira', badge: '' },
-  { id: 9, name: 'Tênis Esportivo', price: 249.9, category: 'Calçados', img: 'https://placehold.co/400x400?text=Esportivo', badge: 'Mais vendido' },
+  { id: 1, name: 'Camiseta Básica', price: 49.9, category: 'Roupas', img: '/products/camiseta.jpg', badge: 'Mais vendido' },
+  { id: 2, name: 'Tênis Casual', price: 189.9, category: 'Calçados', img: '/products/tenis.jpg', badge: 'Novo' },
+  { id: 3, name: 'Mochila Urban', price: 129.9, category: 'Acessórios', img: '/products/mochila.jpg', badge: '' },
+  { id: 4, name: 'Calça Jeans', price: 99.9, category: 'Roupas', img: 'https://bluhen.cdn.magazord.com.br/img/2025/05/produto/10077/05-calca-sarja-masculina-slim-preto-compton-38.png?ims=fit-in/635x865/filters:fill(white)', badge: '' },
+  { id: 5, name: 'Boné Streetwear', price: 59.9, category: 'Acessórios', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0z-sx4RUAYwGez-CImH8PTOO_Zj5J7a4jHg&s', badge: 'Promoção' },
+  { id: 6, name: 'Sandália Conforto', price: 79.9, category: 'Calçados', img: 'https://authenticfeet.vtexassets.com/arquivos/ids/493789-800-800?v=639047788704300000&width=800&height=800&aspect=true', badge: '' },
+  { id: 7, name: 'Jaqueta Corta-Vento', price: 219.9, category: 'Roupas', img: 'https://acdn-us.mitiendanube.com/stores/002/822/533/products/1_preta-0755e2520fcde918b516780560897023-1024-1024.webp', badge: 'Novo' },
+  { id: 8, name: 'Carteira de Couro', price: 89.9, category: 'Acessórios', img: 'https://www.galaxcommerce.com.br/sistema/upload/2905/produtos/CARTEIRA-MASCULINA-LOUIS-VUITTON-FLORIN-TITANIUM_2020-04-19_18-51-19_8.jpg', badge: '' },
+  { id: 9, name: 'Tênis Esportivo', price: 249.9, category: 'Calçados', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA3WKdzE4jNkABxw7PGCCj97R9_XVnLSIwEw&s', badge: 'Mais vendido' },
 ]
 
 const categories = ['Todos', 'Roupas', 'Calçados', 'Acessórios']

@@ -1,7 +1,7 @@
 import { useCart } from '../../context/CartContext'
 
 export default function CartDrawer() {
-  const { items, removeItem, clearCart, total, count, isOpen, closeCart } = useCart()
+  const { items, removeItem, decrementItem, addItem, clearCart, total, count, isOpen, closeCart } = useCart()
 
   return (
     <>
@@ -68,22 +68,34 @@ export default function CartDrawer() {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-800 text-sm truncate">{item.name}</p>
                     <p className="text-xs text-gray-400 mb-1">{item.category}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-amber-600 font-extrabold text-sm">
-                        {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                      </span>
-                      {item.quantity > 1 && (
-                        <span className="text-xs text-gray-400">× {item.quantity}</span>
-                      )}
-                    </div>
+                    <span className="text-amber-600 font-extrabold text-sm">
+                      {(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </span>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    aria-label={`Remover ${item.name}`}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-rose-50 text-gray-400 hover:text-rose-500 transition-colors flex-shrink-0"
-                  >
-                    🗑️
-                  </button>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => decrementItem(item.id)}
+                      aria-label="Diminuir quantidade"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-rose-400 hover:text-rose-500 text-gray-500 font-bold transition-colors text-sm"
+                    >
+                      −
+                    </button>
+                    <span className="w-6 text-center text-sm font-bold text-gray-700">{item.quantity}</span>
+                    <button
+                      onClick={() => addItem({ id: item.id, name: item.name, price: item.price, img: item.img, category: item.category })}
+                      aria-label="Aumentar quantidade"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-emerald-500 hover:text-emerald-600 text-gray-500 font-bold transition-colors text-sm"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      aria-label={`Remover ${item.name}`}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-50 text-gray-300 hover:text-rose-500 transition-colors ml-1"
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
