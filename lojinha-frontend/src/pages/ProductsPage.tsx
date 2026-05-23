@@ -1,22 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/landing/Footer'
 import { useCart } from '../context/CartContext'
+import { supabase } from '../services/supabase'
 
-const allProducts = [
-  { id: 1, name: 'Camiseta Básica', price: 49.9, category: 'Roupas', img: '/products/camiseta.jpg', badge: 'Mais vendido' },
-  { id: 2, name: 'Tênis Casual', price: 189.9, category: 'Calçados', img: '/products/tenis.jpg', badge: 'Novo' },
-  { id: 3, name: 'Mochila Urban', price: 129.9, category: 'Acessórios', img: '/products/mochila.jpg', badge: '' },
-  { id: 4, name: 'Calça Jeans', price: 99.9, category: 'Roupas', img: 'https://bluhen.cdn.magazord.com.br/img/2025/05/produto/10077/05-calca-sarja-masculina-slim-preto-compton-38.png?ims=fit-in/635x865/filters:fill(white)', badge: '' },
-  { id: 5, name: 'Boné Streetwear', price: 59.9, category: 'Acessórios', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0z-sx4RUAYwGez-CImH8PTOO_Zj5J7a4jHg&s', badge: 'Promoção' },
-  { id: 6, name: 'Sandália Conforto', price: 79.9, category: 'Calçados', img: 'https://authenticfeet.vtexassets.com/arquivos/ids/493789-800-800?v=639047788704300000&width=800&height=800&aspect=true', badge: '' },
-  { id: 7, name: 'Jaqueta Corta-Vento', price: 219.9, category: 'Roupas', img: 'https://acdn-us.mitiendanube.com/stores/002/822/533/products/1_preta-0755e2520fcde918b516780560897023-1024-1024.webp', badge: 'Novo' },
-  { id: 8, name: 'Carteira de Couro', price: 89.9, category: 'Acessórios', img: 'https://www.galaxcommerce.com.br/sistema/upload/2905/produtos/CARTEIRA-MASCULINA-LOUIS-VUITTON-FLORIN-TITANIUM_2020-04-19_18-51-19_8.jpg', badge: '' },
-  { id: 9, name: 'Tênis Esportivo', price: 249.9, category: 'Calçados', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA3WKdzE4jNkABxw7PGCCj97R9_XVnLSIwEw&s', badge: 'Mais vendido' },
-]
-
-const categories = ['Todos', 'Roupas', 'Calçados', 'Acessórios']
+type Product = {
+  id: number
+  name: string
+  price: number
+  category: string
+  img: string
+  badge: string | null
+}
 
 const sortOptions = [
   { label: 'Relevância', value: 'default' },
@@ -32,13 +28,46 @@ const badgeColors: Record<string, string> = {
 }
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Todos')
   const [sort, setSort] = useState('default')
   const [added, setAdded] = useState<number | null>(null)
   const { addItem, openCart } = useCart()
 
-  function handleAddToCart(product: typeof allProducts[number]) {
+  useEffect(() => {
+    async function loadProducts() {
+      setLoading(true)
+      setLoadError(null)
+
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, price, category, img, badge')
+        .order('id', { ascending: true })
+
+      if (error) {
+        setLoadError(error.message)
+        setProducts([])
+      } else {
+        setProducts((data as Product[]) ?? [])
+      }
+
+      setLoading(false)
+    }
+
+    void loadProducts()
+  }, [])
+
+  const categories = useMemo(() => {
+    const fromProducts = Array.from(new Set(products.map((p) => p.category))).sort((a, b) =>
+      a.localeCompare(b)
+    )
+    return ['Todos', ...fromProducts]
+  }, [products])
+
+  function handleAddToCart(product: Product) {
     addItem({
       id: product.id,
       name: product.name,
@@ -50,7 +79,7 @@ export default function ProductsPage() {
     setTimeout(() => setAdded(null), 1500)
   }
 
-  const filtered = allProducts
+  const filtered = products
     .filter((p) => category === 'Todos' || p.category === category)
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
@@ -119,7 +148,17 @@ export default function ProductsPage() {
 
       {/* Products Grid */}
       <main className="flex-1 max-w-6xl mx-auto px-6 py-10 w-full">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <h3 className="text-xl font-bold text-gray-700 mb-2">Carregando produtos...</h3>
+            <p className="text-gray-400 text-sm">Aguarde alguns segundos.</p>
+          </div>
+        ) : loadError ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <h3 className="text-xl font-bold text-gray-700 mb-2">Erro ao carregar produtos</h3>
+            <p className="text-gray-400 text-sm max-w-lg">{loadError}</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-6xl mb-4">🔍</span>
             <h3 className="text-xl font-bold text-gray-700 mb-2">Nenhum produto encontrado</h3>
@@ -142,7 +181,7 @@ export default function ProductsPage() {
                       alt={product.name}
                       className="w-full aspect-square object-cover"
                     />
-                    {product.badge && (
+                    {product.badge && badgeColors[product.badge] && (
                       <span className={`absolute top-3 left-3 text-xs font-bold px-3 py-1 rounded-full ${badgeColors[product.badge]}`}>
                         {product.badge}
                       </span>

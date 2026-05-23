@@ -1,7 +1,32 @@
+import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 
 export default function CartDrawer() {
-  const { items, removeItem, decrementItem, addItem, clearCart, total, count, isOpen, closeCart } = useCart()
+  const {
+    items,
+    removeItem,
+    decrementItem,
+    addItem,
+    clearCart,
+    checkout,
+    total,
+    count,
+    isOpen,
+    isCheckingOut,
+    checkoutError,
+    closeCart,
+  } = useCart()
+  const [checkoutSuccess, setCheckoutSuccess] = useState<string | null>(null)
+
+  async function handleCheckout() {
+    setCheckoutSuccess(null)
+    try {
+      const order = await checkout()
+      setCheckoutSuccess(`Pedido #${order.id} criado! Status: ${order.status}.`)
+    } catch {
+      // checkoutError ja vem do contexto
+    }
+  }
 
   return (
     <>
@@ -111,8 +136,20 @@ export default function CartDrawer() {
                 {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
               </span>
             </div>
-            <button className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition-all text-sm shadow">
-              Finalizar compra
+            {checkoutError && (
+              <p className="text-xs font-medium text-rose-600">{checkoutError}</p>
+            )}
+            {checkoutSuccess && (
+              <p className="text-xs font-medium text-emerald-700">{checkoutSuccess}</p>
+            )}
+            <button
+              onClick={() => {
+                void handleCheckout()
+              }}
+              disabled={isCheckingOut}
+              className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-all text-sm shadow"
+            >
+              {isCheckingOut ? 'Finalizando...' : 'Finalizar compra'}
             </button>
             <button
               onClick={clearCart}
